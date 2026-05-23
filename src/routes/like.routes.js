@@ -9,12 +9,10 @@ import { toggleLike,getLikeCount,checkUserLikedPost,getAllLikedPosts } from "../
 const router =express.Router();
 
 
-router.post("/:id/like",UserAuthMidlleware,toggleLike);
-router.get("/:id/likes/count", getLikeCount);
-
-router.get("/:id/liked", UserAuthMidlleware, checkUserLikedPost);
-
-router.get("/liked/me",UserAuthMidlleware,getAllLikedPosts)
+router.post("/post/:id/like",UserAuthMidlleware,toggleLike);
+router.get("/post/:id/likes/count", getLikeCount);
+router.get("/post/:id/liked", UserAuthMidlleware, checkUserLikedPost);
+router.get("/post/liked/me",UserAuthMidlleware,getAllLikedPosts);
 
 
 export default router;

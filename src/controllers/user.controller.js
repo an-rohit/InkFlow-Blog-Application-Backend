@@ -220,9 +220,9 @@ export const login = async (req,res)=>{
       if(!existingUser.isVerified){
          return res.status(400).json({
             status:false,
-            message:"Email not Verified ,verify your Email first ! "
-         })
-      };
+            message:"Email not Verified, verify your Email first!"
+         });
+      }
 
       const isMatch=await bcrypt.compare(password,existingUser.password);
 
@@ -260,10 +260,11 @@ export const login = async (req,res)=>{
             status:true,
             message:"Login Successfull",
             user:{
-               name:existingUser.name,
-               email:existingUser.email,
-               id:existingUser._id,
-               isVerified:existingUser.isVerified,
+               profileImage: existingUser.profileImage,
+               name: existingUser.name,
+               email: existingUser.email,
+               id: existingUser._id,
+               isVerified: existingUser.isVerified,
             },
             token:accessToken,
         });

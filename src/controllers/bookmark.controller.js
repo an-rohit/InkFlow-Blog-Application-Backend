@@ -70,7 +70,7 @@ export const getUserBookmark=async(req,res)=>{
         }
 
         const userBookmarks=await bookmarkModel.find({user}).sort({createdAt:-1}).skip(skip).limit(limit)
-        .populate("post");
+        .populate({ path: "post", populate: { path: "author", select: "name email profileImage" } });
 
         const totalBookmarks=await bookmarkModel.countDocuments({user});
         const totalPages=Math.ceil(totalBookmarks/limit);

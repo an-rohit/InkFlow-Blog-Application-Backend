@@ -84,7 +84,7 @@ export const getAllPost=async(req,res)=>{
             sortOptions={createdAt: 1};
          }
 
-        const  allPost= await postModel.find(filter).sort(sortOptions).skip(skip).limit(limit).populate("author","name email");  
+        const  allPost= await postModel.find(filter).sort(sortOptions).skip(skip).limit(limit).populate("author","name email profileImage");  
 
             //"regex=> Find titles containing search keyword  & "i" = Ignore uppercase/lowercase 
        
@@ -132,7 +132,7 @@ export const getPostById=async(req,res)=>{
 
         const {id} = validationResult.data; // we will write like this {id} bcz zod after validation returns object
 
-        const post = await postModel.findById(id).populate("author","name email");
+        const post = await postModel.findById(id).populate("author","name email profileImage");
 
         if(!post){
             return res.status(404).json({
@@ -294,7 +294,7 @@ export const myPost=async(req,res)=>{
         })
      }
 
-     const post = await postModel.find({author:userId});
+     const post = await postModel.find({author:userId}).populate("author","name email profileImage");
 
      if(post.length===0){
         return res.status(404).json({

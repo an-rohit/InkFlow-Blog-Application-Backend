@@ -6,7 +6,7 @@ import { saveBookmark,getUserBookmark } from "../controllers/bookmark.controller
 const router = express.Router();
 
 
-router.post("/:id/bookmark",UserAuthMidlleware,saveBookmark)
-router.get("/bookmarks/me",UserAuthMidlleware,getUserBookmark);
+router.patch("/post/:id/bookmark",UserAuthMidlleware,saveBookmark);
+router.get("/post/bookmarks/me",UserAuthMidlleware,getUserBookmark);
 
 export default router;

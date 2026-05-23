@@ -90,7 +90,7 @@ export const getPostComments=async(req,res)=>{
     //skip formula 
     const skip=(page-1) * limit;
 
-    const postComment = await commentModel.find({post:id}).sort({createdAt:-1}).skip(skip).limit(limit).populate("author","name");
+    const postComment = await commentModel.find({post:id}).sort({createdAt:-1}).skip(skip).limit(limit).populate("author","name profileImage");
 
     const totalItems=await commentModel.countDocuments({post:id});
     const totalPages= Math.ceil(totalItems/limit);

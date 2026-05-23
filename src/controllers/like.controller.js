@@ -29,25 +29,29 @@ export  const toggleLike= async(req,res)=>{
 
        
 
-        const existingLike=await likeModel.findOne({user:req.user.id,post:id});
+        const existingLike = await likeModel.findOne({ user: req.user.id, post: id });
 
-        if(existingLike){
-             await likeModel.findByIdAndDelete(existingLike._id);
+        if (existingLike) {
+            await likeModel.findByIdAndDelete(existingLike._id);
+            const likeCount = await likeModel.countDocuments({ post: id });
             return res.status(200).json({
-                status:true,
-                message:"You disliked this post !"
-            })
+                status: true,
+                message: "You disliked this post!",
+                likeCount,
+            });
         }
 
         await likeModel.create({
-            user:req.user.id,
-            post:id
+            user: req.user.id,
+            post: id,
         });
 
+        const likeCount = await likeModel.countDocuments({ post: id });
         return res.status(200).json({
-            status:true,
-            message:"You liked this Post !"
-        })
+            status: true,
+            message: "You liked this post!",
+            likeCount,
+        });
 } catch (error) {
         console.error(error);
         return res.status(500).json({
@@ -137,7 +141,7 @@ export const checkUserLikedPost=async(req,res)=>{
 
 export const getAllLikedPosts=async(req,res)=>{
     try {
-      const myLikedPosts=await likeModel.find({user: req.user.id}).populate("post");
+       const myLikedPosts=await likeModel.find({user: req.user.id}).populate({ path: "post", populate: { path: "author", select: "name email profileImage" } });
 
        //Find all Like documents where user equals logged-in user,
        // then replace post id with actual post data.

@@ -6,9 +6,9 @@ const router =express.Router();
 
 
 
-router.post("/:id/comment",UserAuthMidlleware,comments);
+router.post("/post/:id/comment",UserAuthMidlleware,comments);
 
-router.get("/:id/comment",UserAuthMidlleware,getPostComments);
+router.get("/post/:id/comment", getPostComments);
 
 router.put("/comment/:id",UserAuthMidlleware,updateComment);
 
