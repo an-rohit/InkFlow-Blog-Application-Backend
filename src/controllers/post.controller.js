@@ -1,6 +1,7 @@
 import cloudinary from "../config/cloudinary.config.js";
 import postModel from "../models/post.model.js";
-import streamifier from "streamifier"
+import streamifier from "streamifier";
+import jwt from "jsonwebtoken";
 
 
 import {createPostRequestBodySchema,deletePostIdSchema,getPostByIdSchema, updatePostDataSchema,updatePostIdSchema,togglePublishSchema, validatePostIdSchema} from "../validators/post.validator.js";
@@ -72,6 +73,7 @@ export const getAllPost=async(req,res)=>{
 
         //introducing filtering
         const filter ={
+            published: true,
             $or:[{title:{$regex:search,$options:"i"}},{content:{$regex:search,$options:"i"}}]
         }
 
@@ -139,6 +141,32 @@ export const getPostById=async(req,res)=>{
                 status:false,
                 message:"No post has been uploaded !!!"
             })
+        }
+
+        if(!post.published){
+            let isAuthor = false;
+            try {
+                const token = req.headers.authorization?.split(" ")[1];
+                if(token){
+                    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+                    if(decoded.id === post.author._id.toString()){
+                        isAuthor = true;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                return res.status(400).json({
+                    status:false,
+                    message:"Invalid Token"
+                })
+            }
+
+            if(!isAuthor){
+                return res.status(403).json({
+                    status:false,
+                    message:"This post is not published yet!"
+                });
+            }
         }
 
         return res.status(200).json({
